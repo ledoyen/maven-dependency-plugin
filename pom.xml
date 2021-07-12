@@ -90,9 +90,9 @@ under the License.
 
   <properties>
     <mavenVersion>3.1.1</mavenVersion>
-    <doxiaVersion>1.9.1</doxiaVersion>
-    <doxiaSitetoolsVersion>1.9.2</doxiaSitetoolsVersion>
-    <jettyVersion>9.2.28.v20190418</jettyVersion>
+    <doxiaVersion>1.10</doxiaVersion>
+    <doxiaSitetoolsVersion>1.10</doxiaSitetoolsVersion>
+    <jettyVersion>11.0.6</jettyVersion>
     <pluginTestingVersion>3.1.0</pluginTestingVersion>
     <javaVersion>7</javaVersion>
     <project.build.outputTimestamp>2021-06-07T12:17:08Z</project.build.outputTimestamp>
@@ -103,7 +103,7 @@ under the License.
       <dependency> <!-- override older version in maven-dependency-analyzer:1.11.3 -->
         <groupId>org.ow2.asm</groupId>
         <artifactId>asm</artifactId>
-        <version>9.1</version>
+        <version>9.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
