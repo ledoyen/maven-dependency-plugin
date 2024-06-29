@@ -28,7 +28,7 @@ under the License.
   </parent>
 
   <artifactId>maven-dependency-plugin</artifactId>
-  <version>3.7.0-SNAPSHOT</version>
+  <version>3.7.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>Apache Maven Dependency Plugin</name>
@@ -95,9 +95,9 @@ under the License.
     <plexus-archiver.version>4.9.2</plexus-archiver.version>
     <pluginTestingVersion>3.3.0</pluginTestingVersion>
     <resolverVersion>1.4.1</resolverVersion>
-    <slf4j.version>1.7.36</slf4j.version>
+    <slf4jVersion>1.7.36</slf4jVersion>
 
-    <project.build.outputTimestamp>2023-10-20T21:21:50Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-06-18T07:04:19Z</project.build.outputTimestamp>
   </properties>
 
   <dependencyManagement>
@@ -247,18 +247,12 @@ under the License.
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-dependency-tree</artifactId>
-      <version>3.2.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.eclipse.aether</groupId>
-          <artifactId>aether-util</artifactId>
-        </exclusion>
-      </exclusions>
+      <version>3.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-common-artifact-filters</artifactId>
-      <version>3.3.2</version>
+      <version>3.4.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
@@ -312,6 +306,11 @@ under the License.
       <version>0.0.7</version>
       <!-- stick with old GAV until https://github.com/eclipse-m2e/m2e-core/issues/944 is fixed -->
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4jVersion}</version>
     </dependency>
 
     <!-- test -->
@@ -395,7 +394,7 @@ under the License.
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.25.3</version>
+      <version>3.26.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -428,7 +427,7 @@ under the License.
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>${slf4j.version}</version>
+      <version>${slf4jVersion}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -445,16 +444,7 @@ under the License.
                 These files contain results for integration tests which can't contain license header
                 otherwise the IT's will fail.
               -->
-              <exclude>src/it/projects/tree/expected.txt</exclude>
-              <exclude>src/it/projects/tree-includes/expected.txt</exclude>
-              <exclude>src/it/projects/tree-multimodule/expected.txt</exclude>
-              <exclude>src/it/projects/tree-multimodule/module-a/expected.txt</exclude>
-              <exclude>src/it/projects/tree-multimodule/module-b/expected.txt</exclude>
-              <exclude>src/it/projects/tree-verbose-multimodule/expected.txt</exclude>
-              <exclude>src/it/projects/tree-verbose-multimodule/module-a/expected.txt</exclude>
-              <exclude>src/it/projects/tree-verbose-multimodule/module-b/expected.txt</exclude>
-              <exclude>src/it/projects/tree-verbose/expected*.txt</exclude>
-              <exclude>src/it/projects/tree-verbose-small/expected.txt</exclude>
+              <exclude>src/it/projects/**/expected*.txt</exclude>
               <!-- These files contain expected versions for unit tests -->
               <exclude>src/test/resources/unit/verbose-serializer-test/*</exclude>
               <!--
@@ -513,6 +503,7 @@ under the License.
               <filterProperties>
                 <compilerPluginVersion>3.11.0</compilerPluginVersion>
               </filterProperties>
+              <addTestClassPath>true</addTestClassPath>
             </configuration>
             <dependencies>
               <!-- dependencies used only in verification scripts -->

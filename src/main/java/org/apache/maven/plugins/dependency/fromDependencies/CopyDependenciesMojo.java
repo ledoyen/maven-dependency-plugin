@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -38,10 +39,10 @@ import org.apache.maven.plugins.dependency.utils.DependencyUtil;
 import org.apache.maven.plugins.dependency.utils.filters.DestFileFilter;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
-import org.apache.maven.shared.transfer.artifact.DefaultArtifactCoordinate;
 import org.apache.maven.shared.transfer.artifact.install.ArtifactInstaller;
 import org.apache.maven.shared.transfer.artifact.install.ArtifactInstallerException;
-import org.apache.maven.shared.transfer.artifact.resolve.ArtifactResolverException;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.util.artifact.SubArtifact;
 
 /**
  * Goal that copies the project dependencies from the repository to a defined location.
@@ -96,12 +97,6 @@ public class CopyDependenciesMojo extends AbstractFromDependenciesMojo {
      */
     @Parameter(property = "mdep.addParentPoms", defaultValue = "false")
     protected boolean addParentPoms;
-
-    /**
-     * <i>not used in this goal</i>
-     */
-    @Parameter
-    protected boolean ignorePermissions;
 
     /**
      * Main entry into mojo. Gets the list of dependencies and iterates through calling copyArtifact.
@@ -207,7 +202,7 @@ public class CopyDependenciesMojo extends AbstractFromDependenciesMojo {
      * @param theUseBaseVersion specifies if the baseVersion of the artifact should be used instead of the version.
      * @param removeClassifier specifies if the classifier should be removed from the file name when copying.
      * @throws MojoExecutionException with a message if an error occurs.
-     * @see CopyUtil#copyFile(File, File)
+     * @see CopyUtil#copyArtifactFile(Artifact, File)
      * @see DependencyUtil#getFormattedOutputDirectory(boolean, boolean, boolean, boolean, boolean, boolean, File, Artifact)
      */
     protected void copyArtifact(
@@ -233,9 +228,10 @@ public class CopyDependenciesMojo extends AbstractFromDependenciesMojo {
         File destFile = new File(destDir, destFileName);
 
         try {
-            copyUtil.copyFile(artifact.getFile(), destFile);
+            copyUtil.copyArtifactFile(artifact, destFile);
         } catch (IOException e) {
-            throw new MojoExecutionException("Failed copy " + artifact.getFile() + " to " + destFile, e);
+            throw new MojoExecutionException(
+                    "Failed to copy artifact '" + artifact + "' (" + artifact.getFile() + ") to " + destFile, e);
         }
     }
 
@@ -277,10 +273,12 @@ public class CopyDependenciesMojo extends AbstractFromDependenciesMojo {
                                 pomArtifact, removeVersion, prependGroupId, useBaseVersion, removeClassifier));
                 if (!pomDestFile.exists()) {
                     try {
-                        copyUtil.copyFile(pomArtifact.getFile(), pomDestFile);
+                        copyUtil.copyArtifactFile(pomArtifact, pomDestFile);
                     } catch (IOException e) {
                         throw new MojoExecutionException(
-                                "Failed copy " + pomArtifact.getFile() + " to " + pomDestFile, e);
+                                "Failed to copy artifact '" + pomArtifact + "' (" + pomArtifact.getFile() + ") to "
+                                        + pomDestFile,
+                                e);
                     }
                 }
             }
@@ -292,21 +290,16 @@ public class CopyDependenciesMojo extends AbstractFromDependenciesMojo {
      * @return {@link Artifact}
      */
     protected Artifact getResolvedPomArtifact(Artifact artifact) {
-        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
-        coordinate.setGroupId(artifact.getGroupId());
-        coordinate.setArtifactId(artifact.getArtifactId());
-        coordinate.setVersion(artifact.getVersion());
-        coordinate.setExtension("pom");
 
         Artifact pomArtifact = null;
         // Resolve the pom artifact using repos
         try {
-            ProjectBuildingRequest buildingRequest = newResolveArtifactProjectBuildingRequest();
-
-            pomArtifact = getArtifactResolver()
-                    .resolveArtifact(buildingRequest, coordinate)
-                    .getArtifact();
-        } catch (ArtifactResolverException e) {
+            org.eclipse.aether.artifact.Artifact aArtifact = RepositoryUtils.toArtifact(artifact);
+            org.eclipse.aether.artifact.Artifact aPomArtifact = new SubArtifact(aArtifact, null, "pom");
+            org.eclipse.aether.artifact.Artifact resolvedPom =
+                    getResolverUtil().resolveArtifact(aPomArtifact, getProject().getRemoteProjectRepositories());
+            pomArtifact = RepositoryUtils.toArtifact(resolvedPom);
+        } catch (ArtifactResolutionException e) {
             getLog().info(e.getMessage());
         }
         return pomArtifact;

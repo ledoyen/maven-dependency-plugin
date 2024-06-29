@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,21 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.plugins.dependency.utils.translators;
 
-import java.util.Set;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.logging.Log;
+import static org.assertj.core.api.Assertions.assertThat
 
-/**
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- */
-public interface ArtifactTranslator {
-    /**
-     * @param artifacts set of {@link Artifact}s.
-     * @param log {@link Log}
-     * @return set of {@link org.eclipse.aether.artifact.Artifact}
-     */
-    Set<org.eclipse.aether.artifact.Artifact> translate(Set<Artifact> artifacts, Log log);
-}
+assertThat(new File(basedir, "target/tree1.txt"))
+        .hasSameTextualContentAs(new File(basedir, "expected1.txt"))
+
+assertThat(new File(basedir, "target/tree2.txt"))
+        .hasSameTextualContentAs(new File(basedir, "expected2.txt"))
+
+return true

@@ -53,6 +53,10 @@ ${project.name}
   Maven to output the path of the dependencies from the local repository in a classpath format to be used in java -cp.
   The classpath file may also be attached and installed/deployed along with the main artifact.
 
+  *{{{./collect-dependencies-mojo.html}dependency:collect}} collects the project dependencies from the repository.
+  It lists the groupId:artifactId:version information by downloading the pom files without downloading the actual
+  artifacts such as jar files.
+
   *{{{./copy-mojo.html}dependency:copy}} takes a list of artifacts defined in the plugin configuration section and
   copies them to a specified location, renaming them or stripping the version if desired. This goal can resolve
   the artifacts from remote repositories if they don't exist in either the local repository or the reactor.
@@ -61,7 +65,7 @@ ${project.name}
   optionally transitive dependencies and copies them to a specified location, stripping the version if desired.
   This goal can also be run from the command line.
 
-  *{{{./display-ancestors-mojo.html}dependency:display-ancestors}} displays all ancestor POMs of the project. 
+  *{{{./display-ancestors-mojo.html}dependency:display-ancestors}} displays all ancestor POMs of the project.
   This may be useful in a continuous integration system where you want to know all parent poms of the project.
   This goal can also be run from the command line.
 
@@ -88,8 +92,10 @@ ${project.name}
 
   *{{{./resolve-plugins-mojo.html}dependency:resolve-plugins}} tells Maven to resolve plugins and their dependencies.
 
-  *{{{./sources-mojo.html}dependency:sources}} tells Maven to resolve all dependencies and their source attachments,
+  *{{{./resolve-sources-mojo.html}dependency:resolve-sources}} tells Maven to resolve all dependencies and their source attachments,
   and displays the version.
+
+  *{{{./sources-mojo.html}dependency:sources}} has been deprecated for removal in favor of {{{./resolve-sources-mojo.html}dependency:resolve-sources}}.
 
   *{{{./tree-mojo.html}dependency:tree}} displays the dependency tree for this project.
 

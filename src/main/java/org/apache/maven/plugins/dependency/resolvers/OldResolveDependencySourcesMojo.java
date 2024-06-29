@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,20 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.plugins.dependency.resolvers;
 
-import java.io.*;
-import org.codehaus.plexus.util.*;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
-String actual = FileUtils.fileRead( new File( basedir, "target/tree.txt" ) );
-String expected = FileUtils.fileRead( new File( basedir, "expected.txt" ) );
-
-actual = actual.replaceAll( "[\n\r]+", "\n" );
-expected = expected.replaceAll( "[\n\r]+", "\n" );
-
-if ( !actual.equals( expected ) )
-{
-    throw new Exception( "Unexpected dependency tree." + System.lineSeparator() + "Expected:" + System.lineSeparator()
-        + expected + System.lineSeparator() + "Actual:" + System.lineSeparator() + actual );
-}
-
-return true;
+/**
+ * Goal that resolves the project source dependencies from the repository.
+ *
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
+ * @since 2.0-alpha2
+ * @deprecated in favor of {@code resolve-sources} goal and will be removed in a future version
+ */
+@Mojo(
+        name = "sources",
+        defaultPhase = LifecyclePhase.GENERATE_SOURCES,
+        requiresDependencyResolution = ResolutionScope.TEST,
+        threadSafe = true)
+@Deprecated
+public class OldResolveDependencySourcesMojo extends ResolveDependencySourcesMojo {}
